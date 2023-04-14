@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Index</h1>
+<a href="{% url 'movies:create' %}">Create</a>
+<hr>
+  {% for movie in movies %}
+    <h2>{{ movie.title }} {{ movie.content }}</h2>
+    {% if request.user.is_authenticated %}
+    <div>
+      <form action="{% url 'movies:likes' movie.pk %}" method="POST">
+        {% csrf_token %}
+        {% if request.user in movie.like_users.all %}
+          <input type="submit" value="like 취소">
+        {% else %}
+          <input type="submit" value='like'>
+        {% endif %}
+      </form>
+    </div>
+    {% endif %}
+    <a href="{% url 'movies:detail' movie.id %}">show detail</a>
+    <hr>  
+  {% endfor %}
+{% endblock content %}
